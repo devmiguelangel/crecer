@@ -12,8 +12,9 @@ class SibasDB extends MySQLi
 			2 => 'TRD|Todo Riesgo Domiciliario',
 			3 => 'TRM|Todo Riesgo Equipo Móvil'),
 		$coverage = array(
-			0 => '1|Individual/Mancomunado',
-			1 => '2|Banca Comunal',
+			1 => 'Individual',
+			3 => 'Mancomunado',
+			2 => 'Banca Comunal',
 			),
 		$typeTerm = array(
 			0 => 'Y|Años', 

@@ -62,14 +62,9 @@ $link = new SibasDB();
 	<div class="content-input">
 		<select id="dl-coverage" name="dl-coverage" class="required fbin">
 			<option value="">Seleccione...</option>
-<?php
-foreach ($link->coverage as $key => $value) {
-	$coverage = explode('|', $value);
-	if ($coverage[0] != 2) {
-	}
-		echo '<option value="'.$coverage[0].'">'.$coverage[1].'</option>';
-}
-?>
+			<?php foreach ($link->coverage as $key => $value): ?>
+			<option value="<?= $key ;?>"><?= $value ;?></option>
+			<?php endforeach ?>
 		</select>
 	</div>
 	<br>

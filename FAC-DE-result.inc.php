@@ -49,8 +49,10 @@ $(document).ready(function(e) {
 	});
 });
 </script>
-<input type="hidden" id="ms" name="ms" value="<?=$_GET['ms'];?>">
-<input type="hidden" id="page" name="page" value="<?=$_GET['page'];?>">
+<?php if (isset($_GET['ms'], $_GET['page'])): ?>
+<input type="hidden" id="ms" name="ms" value="<?= $_GET['ms'] ;?>">
+<input type="hidden" id="page" name="page" value="<?= $_GET['page'] ;?>">
+<?php endif ?>
 <table class="result-list">
 	<thead>
     	<tr>
