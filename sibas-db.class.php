@@ -498,7 +498,7 @@ class SibasDB extends MySQLi
     		if ($this->rs->num_rows === 1) {
     			$this->row = $this->rs->fetch_array(MYSQLI_ASSOC);
     			$this->rs->free();
-    			
+
     			if ((int)$this->row['cobertura'] === 2) {
     				return true;
     			}
@@ -515,17 +515,22 @@ class SibasDB extends MySQLi
     	$this->sql = 'select 
 			sdd.id_detalle,
 			sdd.monto_banca_comunal,
-			std.tasa_final as tasa_producto
-		from s_de_cot_cabecera as sdc
-			inner join 
-				s_de_cot_detalle as sdd on (sdd.id_cotizacion = sdc.id_cotizacion)
-			inner join 
-				s_de_cot_cliente as scl on (scl.id_cliente = sdd.id_cliente)
-			inner join 
-				s_producto_cia as spc on (spc.id_prcia = sdc.id_prcia)
-			inner join 
-				s_tasa_de as std on (std.id_prcia = spc.id_prcia)
-		where sdc.id_cotizacion = "' . $idc . '"
+			std.tasa as tasa_producto
+		from 
+			s_de_cot_cabecera as sdc
+				inner join 
+			s_de_cot_detalle as sdd on (sdd.id_cotizacion = sdc.id_cotizacion)
+				inner join 
+			s_de_cot_cliente as scl on (scl.id_cliente = sdd.id_cliente)
+				inner join 
+			s_entidad_financiera as sef on (sef.id_ef = sdc.id_ef)
+				inner join
+			s_ef_compania as sec on (sec.id_ef = sef.id_ef)
+				inner join
+			s_de_tasa as std on (std.id_ef_cia = sec.id_ef_cia
+				and std.cobertura = sdc.cobertura)
+		where 
+			sdc.id_cotizacion = "' . $idc . '"
 		;';
 
 		if (($this->rs = $this->query($this->sql, MYSQLI_STORE_RESULT)) !== false) {
