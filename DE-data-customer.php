@@ -41,18 +41,23 @@ if ($link->checkBancaComunal($_GET['idc']) === true) {
 
 $max_item = 0;
 if (($row_cov = $link->getTypeCoverage($_GET['idc'])) !== false) {
-	if (1 === (int)$row_cov['cobertura']) {
+	switch ((int)$row_cov['cobertura']) {
+	case 1:
 		$max_item = 1;
-	} else {
-		MaxItem:
-		if (($rowDE = $link->get_max_amount_optional($_SESSION['idEF'], 'DE')) !== FALSE) {
-			$max_item = (int)$rowDE['max_item'];
-		}
+		break;
+	case 3:
+		$max_item = 2;
+		break;
+	default:
+		goto MaxItem;
+		break;
 	}
 } else {
-	goto MaxItem;
+	MaxItem:
+	if (($rowDE = $link->get_max_amount_optional($_SESSION['idEF'], 'DE')) !== FALSE) {
+		$max_item = (int)$rowDE['max_item'];
+	}
 }
-
 
 $swCl = FALSE;
 
@@ -97,8 +102,8 @@ if(isset($_POST['dsc-dni'])){
 	$dni = $link->real_escape_string(trim($_POST['dsc-dni']));
     $web_service = $link->checkWebService($_SESSION['idEF'], 'DE');
 
-    if (true === $web_service) {
-        require ('classes/WebServiceIdepro.php');
+    if ($web_service) {
+        /*require ('classes/WebServiceIdepro.php');
 
         $ws = new WebServiceIdepro();
 
@@ -148,7 +153,7 @@ if(isset($_POST['dsc-dni'])){
             }
         } else {
             $err_search = $ws->message;
-        }
+        }*/
     } else {
         $sqlSc = 'select
 			scl.id_cliente,
@@ -177,11 +182,11 @@ if(isset($_POST['dsc-dni'])){
 			scl.saldo_deudor as cl_saldo,
 			sdd.monto_banca_comunal as cl_monto_bc
 		from
-			s_de_cot_cliente as scl
+			s_de_cot_detalle as sdd
 				inner join
-					s_de_cot_detalle as sdd on (sdd.id_cliente = scl.id_cliente)
+			s_de_cot_cliente as scl on (scl.id_cliente = sdd.id_cliente)
 				inner join
-				    s_entidad_financiera as sef on (sef.id_ef = scl.id_ef)
+		    s_entidad_financiera as sef on (sef.id_ef = scl.id_ef)
 		where
 			scl.ci = "'.$dni.'"
 				and sef.id_ef = "'.base64_decode($_SESSION['idEF']).'"
@@ -541,14 +546,14 @@ if($swCl === FALSE){
 		end) as cl_genero,
 		sdd.porcentaje_credito as cl_pc
 	from
-		s_de_cot_cliente as scl
+		s_de_cot_cabecera as sdc
+			inner join
+		s_de_cot_detalle as sdd ON (sdc.id_cotizacion = sdd.id_cotizacion)
+			inner join 
+		s_de_cot_cliente as scl ON (scl.id_cliente = sdd.id_cliente)
 			inner join
 		s_departamento as sde ON (sde.id_depto = scl.extension)
 			inner join
-		s_de_cot_detalle as sdd ON (sdd.id_cliente = scl.id_cliente)
-			inner join
-		s_de_cot_cabecera as sdc ON (sdc.id_cotizacion = sdd.id_cotizacion)
-			inner join 
 		s_entidad_financiera as sef ON (sef.id_ef = scl.id_ef)
 	where
 		sdc.id_cotizacion = "'.base64_decode($_GET['idc']).'"
@@ -561,7 +566,7 @@ if($swCl === FALSE){
 	$rsCl = $link->query($sqlCl,MYSQLI_STORE_RESULT);
 	$nCl = $rsCl->num_rows;
 	if ($nCl < $max_item) {
-		if($web_service === true){
+		if($web_service){
 ?>
 <form id="fde-sc" name="fde-sc" action="" method="post" class="form-quote">
 	<label>Documento de Identidad: <span>*</span></label>
@@ -579,13 +584,10 @@ if($swCl === FALSE){
 	<label>Archivo: <span>*</span></label>
 	<div class="content-input" style="width:auto;">
 		<!--<input type="file" id="file-import" name="file-import"  style="width:310px;" class="required text fbin"/>-->
-		<a href="javascript:;" id="a-dc-attached" class="attached">Seleccione archivo</a>
+		<a href="javascript:;" id="a-dc-attached" class="attached" data-product="DE">Seleccione archivo</a>
 		<div class="attached-mess" style="width:220px;">
 			El formato del archivo a subir debe ser TXT
 		</div>
-		<script type="text/javascript">
-			set_ajax_upload('dc-attached', 'DE');
-		</script>
 	</div>
 	<input type="submit" id="dsc-sc" name="dsc-sc" value="Importar" class="btn-search-cs"/>
 	<input type="hidden" id="dc-attached" name="dc-attached" value="" class="required"/>
@@ -925,3 +927,8 @@ if($swCl === TRUE) {
 		<img src="img/loading-01.gif" width="35" height="35" />
 	</div>
 </form>
+<?php if (!$web_service): ?>
+	<script type="text/javascript">
+		set_ajax_upload('dc-attached');
+	</script>
+<?php endif ?>

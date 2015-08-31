@@ -487,30 +487,25 @@ class SibasDB extends MySQLi
     	}
 
     	$this->sql = 'select 
-    		count(spc.id_prcia) as flag
+    		sdc.cobertura
     	from ' . $tbl[0] . ' as sdc
-    		inner join
-    			s_producto_cia as spc on (spc.id_prcia = sdc.id_prcia)
-    	where sdc.' . $tbl[1] . ' = "' . base64_decode($id) . '"
-    		and lower(spc.nombre) = "banca comunal"
+    	where 
+    		sdc.' . $tbl[1] . ' = "' . base64_decode($id) . '"
+    	limit 0, 1
     	;';
 
     	if (($this->rs = $this->query($this->sql, MYSQLI_STORE_RESULT)) !== false) {
     		if ($this->rs->num_rows === 1) {
     			$this->row = $this->rs->fetch_array(MYSQLI_ASSOC);
     			$this->rs->free();
-
-    			if ((int)$this->row['flag'] === 1) {
+    			
+    			if ((int)$this->row['cobertura'] === 2) {
     				return true;
-    			} else {
-    				return false;
     			}
-    		} else {
-    			return false;
     		}
-    	} else {
-    		return false;
     	}
+
+    	return false;
     }
 
     public function setDatabcCot($idc)
