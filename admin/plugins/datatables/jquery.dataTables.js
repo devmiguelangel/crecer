@@ -11979,4 +11979,42 @@ $(document).ready(function() {
 		   });
 		   e.preventDefault();
    });
+   
+   //ELIMINAR CORREOS ELECTRONICOS
+   $("a[href].eliminar").click(function(e){
+	   var variable = $(this).attr('id');
+	   //alert(variable);
+	   var vec = variable.split('|');
+	   var idcorreo = vec[0];
+	   var id_ef = vec[1];
+	   jConfirm("¿Esta seguro de eliminar la ocupacion?", "Eliminar registro", function(r) {
+			//alert(r);
+			if(r) {
+					var dataString ='idcorreo='+idcorreo+'&id_ef='+id_ef+'&opcion=eliminarcorreo';
+					$.ajax({
+						   async: true,
+						   cache: false,
+						   type: "POST",
+						   url: "eliminar_registro.php",
+						   data: dataString,
+						   success: function(datareturn) {
+								  //alert(datareturn);
+								  if(datareturn==1){
+									 //location.reload(true);
+									 $('#del-'+idcorreo).fadeOut('slow');
+								  }else if(datareturn==2){
+									jAlert("El registro no pudo eliminarse intente nuevamente", "Mensaje");
+									 e.preventDefault();
+								  }
+
+						   }
+					});
+
+			} else {
+				//jAlert("No te gusta Actualidad jQuery", "Actualidad jQuery");
+			}
+	   });
+	   e.preventDefault();
+   });
+   
 });
