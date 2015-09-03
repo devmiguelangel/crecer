@@ -88,6 +88,8 @@ function de_em_certificate($link, $row, $rsDt, $url, $implant, $fac, $reason = '
             }
 
             $nbc = ' - ' . $k;
+        } else {
+            $nbc = ' - ' . $k;
         }
         
         $ci = array('', '');
