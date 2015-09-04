@@ -23,14 +23,13 @@ function de_em_certificate($link, $row, $rsDt, $url, $implant, $fac, $reason = '
     $coverage = array('', '', '');
     switch ($_coverage) {
     case 1:
-        if ($nCl === 1) {
-            $coverage[0] = 'X';
-        } elseif ($nCl === 2) {
-            $coverage[1] = 'X';
-        }
+        $coverage[0] = 'X';
         break;
     case 2:
         $coverage[2] = 'X';
+        break;
+    case 3:
+        $coverage[1] = 'X';
         break;
     }
 

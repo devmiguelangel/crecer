@@ -13,7 +13,7 @@ class SibasDB extends MySQLi
             3 => 'TRM|Todo Riesgo Equipo Móvil'),
         $coverage = array(
             1 => 'Individual',
-            3 => 'Mancomunado',
+            3 => 'Mancomunado (Crédito Educacional)',
             2 => 'Banca Comunal',
             ),
         $typeTerm = array(
