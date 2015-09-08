@@ -87,7 +87,7 @@ function de_em_certificate($link, $row, $rsDt, $url, $implant, $fac, $reason = '
             }
 
             $nbc = ' - ' . $k;
-        } else {
+        } elseif ($_coverage === 3) {
             $nbc = ' - ' . $k;
         }
         
