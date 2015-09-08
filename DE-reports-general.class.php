@@ -57,6 +57,7 @@ class ReportsGeneralDE{
         $this->data['r-issued'] = $this->cx->real_escape_string(trim($data['r-issued']));
         $this->data['r-rejected'] = $this->cx->real_escape_string(trim($data['r-rejected']));
         $this->data['r-canceled'] = $this->cx->real_escape_string(trim($data['r-canceled']));
+        $this->data['coverage'] = $this->cx->real_escape_string(trim($data['r-coverage']));
         
         $this->data['idUser'] = $this->cx->real_escape_string(trim(base64_decode($data['r-idUser'])));
         
@@ -252,7 +253,8 @@ class ReportsGeneralDE{
                 and sc.ci like '%".$this->data['dni']."%'
                 and sc.complemento like '%".$this->data['comp']."%'
                 and sc.extension like '%".$this->data['ext']."%'
-                and sde.fecha_creacion between '".$this->data['date-begin']."' and '".$this->data['date-end']."' ";
+                and sde.fecha_creacion between '".$this->data['date-begin']."' and '".$this->data['date-end']."'
+                and sde.cobertura like '%" . $this->data['coverage'] . "%' ";
         if($this->token === 'RG'){
             //and sde.id_poliza like '%".$this->data['policy']."%'
             $this->sql .= "and if(sdf.aprobado is null,
@@ -835,6 +837,7 @@ $(document).ready(function(e) {
                     . '&frp-issued=' . $this->data['r-issued'] 
                     . '&frp-rejected=' . $this->data['r-rejected'] 
                     . '&frp-canceled=' . $this->data['r-canceled'] 
+                    . '&frp-coverage=' . $this->data['coverage']
                     . '" class="send-xls" target="_blank">Exportar a Formato Excel</a>';
             }
 ?>

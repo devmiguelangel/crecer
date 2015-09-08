@@ -115,6 +115,7 @@ if(isset($_GET['fde']) && isset($_GET['fde-id-user'])){
     $s_ext = $link->real_escape_string(trim($_GET['fde-ext']));
     $s_date_begin = $link->real_escape_string(trim($_GET['fde-date-b']));
     $s_date_end = $link->real_escape_string(trim($_GET['fde-date-e']));
+    $s_coverage = $link->real_escape_string(trim($_GET['fde-coverage']));
     
     $idUSer = $link->real_escape_string(trim(base64_decode($_GET['fde-id-user'])));
     $type_user = $link->real_escape_string(trim(base64_decode($_GET['fde-type-user'])));
@@ -238,6 +239,7 @@ if(isset($_GET['fde']) && isset($_GET['fde-id-user'])){
             and sde.aprobado = true
             and sde.rechazado = false
             and sde.prefijo like '%" . $s_prefix . "%'
+            and sde.cobertura like '%" . $s_coverage . "%'
             and (";
     if($nEF > 0){
         $sql .= "sef.id_ef like '".base64_decode($s_ef[0])."'";

@@ -315,6 +315,15 @@ if($rsEx->data_seek(0) === TRUE){
 }
 ?>
             </select><br>
+
+            <label>Cobertura: </label>
+            <select id="frp-coverage" name="frp-coverage">
+                <option value="">Todos</option>
+            <?php foreach ($link->coverage as $key => $value): ?>
+                <option value="<?= $key ;?>"><?= $value ;?></option>
+            <?php endforeach ?>
+            </select>
+            
             <input type="hidden" id="frp-canceled-p" name="frp-canceled-p" value="0" >
             
             <label style="">Fecha: </label>
